@@ -1,0 +1,15 @@
+- name: Set up web server with Nginx, Node.js, remote git repo for deploys
+  hosts: host-01
+  become: true
+  vars:
+    project_alias:
+    src_dir: /var/repo
+    www_dir: /var/www
+    default_user: ubuntu
+    ubuntu_dist: trusty
+    node_source_key_url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+    node_version: 6.x
+  roles:
+    - common
+    - nginx
+    - node

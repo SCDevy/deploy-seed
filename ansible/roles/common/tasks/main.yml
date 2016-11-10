@@ -1,0 +1,37 @@
+---
+- name: Update cache and install HTTPS transport for apt
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: yes
+- name: Install git
+  apt:
+    name: git
+    state: present
+
+- name: Create www directory for {{ project_alias }}
+  file:
+    path: "{{ www_dir }}/{{ project_alias }}"
+    owner: "{{ default_user }}"
+    mode: "0744"
+    state: directory
+- name: Create src directory for {{ project_alias }}
+  file:
+    path: "{{ src_dir }}/{{ project_alias }}.git"
+    owner: "{{ default_user }}"
+    mode: "0744"
+    state: directory
+  register: project_src_dir
+
+- name: Initialize empty git repository in {{ src_dir }}/{{ project_alias }}.git
+  become_user: "{{ default_user }}"
+  command: git init --bare
+  args:
+    chdir: "{{ src_dir }}/{{ project_alias }}.git"
+  when: project_src_dir.changed == True
+- name: Add post-receive hook to /hooks in git repository
+  template:
+    src: ../files/post-receive.j2
+    dest: "{{ src_dir }}/{{ project_alias }}.git/hooks/post-receive"
+    owner: "{{ default_user }}"
+    mode: "0755"
