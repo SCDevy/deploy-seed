@@ -1,1 +1,1 @@
-host-01 ansible_host=54.203.122.66 ansible_user=ubuntu ansible_ssh_private_key_file=ansible/private/stephen-sandbox.pem
+host-01 ansible_host=00.000.000.00 ansible_user=ubuntu ansible_ssh_private_key_file=ansible/private/key.pem
